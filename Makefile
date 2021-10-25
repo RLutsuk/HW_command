@@ -5,7 +5,7 @@ OUT_DIR	 = out
 OUT      = $(OUT_DIR)/sort
 CC	     = gcc
 FLAGS	 = -g -c -Wall
-LFLAGS   = 
+LFLAGS   = -lm
 
 all: $(OBJS) | mkdir
 	$(CC) -g $(OUT_DIR)/* -o $(OUT) $(LFLAGS)
