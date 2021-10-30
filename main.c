@@ -5,7 +5,6 @@
 
 #include "includes/algorithms.h"
 #include "includes/benchmark.h"
-#include "includes/fhandle.h"
 #include "includes/utils.h"
 
 extern unsigned long long MAX_RAND;
