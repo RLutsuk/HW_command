@@ -24,7 +24,7 @@ int return_num(char* str, int length) {
 
 	for (int i = 0; i < length; i++) {
 
-		if (str[i] > '9' && str[i] < '0') {
+		if (str[i] > '9' || str[i] < '0') {
 			return 0;
 		}
 		else {
@@ -44,9 +44,6 @@ int* get_random_array(int size) {
 	int* arr = (int*)malloc(sizeof(int) * size);
 
 	srand(time(0));
-
-	if (!MAX_RAND)
-		MAX_RAND = RAND_MAX;
 
 	for (int i = 0; i < size; i++) {
 
@@ -70,7 +67,6 @@ int* (*(return_algo(char* str))) (int*) {
 
 
 void dump_all() {
-
 
 	printf("ALGO_FS array:\n");
 	for (int i = 0; i < ALGO_COUNT; i++)
@@ -102,7 +98,7 @@ void dump_all() {
 	else
 		printf("ALGORITHM is not defined\n");
 
-	if (dataset_size > 1) {
+	if (dataset_size >= 1) {
 
 		printf("DATASET_SIZE = %d\n", dataset_size);
 		printf("DATASET ARRAY:\n");
