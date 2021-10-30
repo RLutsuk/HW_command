@@ -8,9 +8,17 @@
 
 extern unsigned long long MAX_RAND;
 extern short multiplier;
-extern int* (*alg_fs[2])(int*);
+extern char* file_name;
+extern int* (*alg_fs[ALGO_COUNT])(int*);
+extern short benchmark_mode;
+extern int* dataset;
+extern int* random_arr;
+extern FILE* file;
+extern int* (*algorithm)(int*);
+extern int dataset_size;
+extern int ra_size;
 
-int is_a_num(char* str, int length) {
+int return_num(char* str, int length) {
 
 	int res = 0;
 
@@ -51,9 +59,6 @@ int* get_random_array(int size) {
 
 int* (*(return_algo(char* str))) (int*) {
 
-	printf("%p\n", alg_fs[SHELL_SORT]);
-	printf("%p\n", alg_fs[INSERTION_SORT]);
-
 	if (!strcmp(str, "shell_sort") || !strcmp(str, "shell") || !strcmp(str, "shellsort"))
 		return alg_fs[SHELL_SORT];
 
@@ -64,8 +69,58 @@ int* (*(return_algo(char* str))) (int*) {
 }
 
 
-void check() { // tmp function
+void dump_all() {
 
-	printf("%d\n", multiplier);
+
+	printf("ALGO_FS array:\n");
+	for (int i = 0; i < ALGO_COUNT; i++)
+		printf("%p ", alg_fs[i]);
+	printf("\n");
+
+	if (MAX_RAND)
+		printf("MAX_RAND = %llu\n", MAX_RAND);
+	else
+		printf("MAX_RAND is not defined\n");
+
+	if (multiplier)
+		printf("MULTIPLIER = %d\n", multiplier);
+	else
+		printf("MULTIPLIER is not defined\n");
+
+	if(benchmark_mode)
+		printf("BENCHMARK_MODE = %d\n", benchmark_mode);
+	else
+		printf("BENCHMARK_MODE is not defined\n");
+
+	if(file_name)
+		printf("FILE_NAME = %s\n", file_name);
+	else
+		printf("FILE_NAME is not defined\n");
+
+	if(algorithm)
+		printf("ALGORITHM = %p\n", algorithm);
+	else
+		printf("ALGORITHM is not defined\n");
+
+	if (dataset_size > 1) {
+
+		printf("DATASET_SIZE = %d\n", dataset_size);
+		printf("DATASET ARRAY:\n");
+		for (int i = 0; i < dataset_size; i++)
+			printf("%d ", dataset[i]);
+		printf("\n");
+	}
+	else
+		printf("DATASET_SIZE is not defined\nDATASET ARRAY is not defined\n");
+
+	if (ra_size)
+		printf("RA_SIZE = %d\n", ra_size);
+	else
+		printf("RA_SIZE is not defined\n");
+
+	if (file)
+		printf("FILE is defined\n");
+	else
+		printf("FILE is not defined\n");
 
 }
