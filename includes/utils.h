@@ -20,7 +20,8 @@ int* (*(return_algo(char* str))) (int*); // check is str a valid algo
 
 int* get_random_array(int size); // get array of a random numbers
 
-int* read_file(char* file_name);
-void write_file(char* file_name, int* source);
+int* read_file();
+void write_file(char* file_name, int* source, int count);
+void get_random_file(int count, char* file_name);
 
 void dump_all();

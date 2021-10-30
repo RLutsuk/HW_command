@@ -27,6 +27,8 @@ int main(int argc, char** argv) {
 	multiplier = 1;
 	benchmark_mode = 0;
 	MAX_RAND = RAND_MAX;
+	ra_size = 0;
+	file_name = NULL;
 
 	for (int i = 1; i < argc; i++) {
 
@@ -86,9 +88,9 @@ int main(int argc, char** argv) {
 			if ((i + 1) <= argc) {
 
 				file_name = argv[i + 1];
-				FILE* file = fopen(file_name, "w+");
+				file = fopen(file_name, "r+");
 
-				if (!file) {
+				if (!file && !ra_size) {
 
 					printf("File with provided filename doesn\'t exist or can\'t be opened.\n");
 					return 0;
@@ -181,7 +183,16 @@ int main(int argc, char** argv) {
 		}
 	}
 
-	dump_all();
+	//dump_all();
+
+	if (ra_size) {
+		if (file_name)
+			get_random_file(ra_size, file_name);
+		else
+			get_random_file(ra_size, "output.txt");
+
+		return 0;
+	}
 
 
 	return 0;

@@ -48,7 +48,6 @@ int* get_random_array(int size) {
 	for (int i = 0; i < size; i++) {
 
 		arr[i] = rand() % MAX_RAND;
-		
 	}
 
 	return arr;
@@ -119,4 +118,46 @@ void dump_all() {
 	else
 		printf("FILE is not defined\n");
 
+}
+
+void get_random_file(int count, char* file_name) {
+
+	int* arr = get_random_array(count);
+
+	printf("%s\n", file_name);
+
+	FILE* out_file = fopen(file_name, "w+");
+
+	if (!file)
+		return;
+	printf("HERE\n");
+	for (int i = 0; i < count; i++)
+		fprintf(out_file, "%d\n", arr[i]);
+
+	fclose(out_file);
+
+}
+
+void write_file(char* file_name, int* source, int count) {
+
+	if (!file)
+		file = fopen(file_name, "w+");
+
+	if (!file)
+		return;
+
+	for (int i = 0; i < count; i++)
+		fprintf(file, "%d\n", source[i]);
+
+	fclose(file);
+
+}
+
+int* read_file() {
+
+	int* res = (int*)malloc(sizeof(int));
+
+	
+
+	return res;
 }
