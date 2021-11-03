@@ -2,15 +2,16 @@
 
 #include "includes/algorithms.h"
 
-int* shell_sort(int* arr) {
+void shell_sort(int* arr, int size) {
 
-	printf("called shell_sort");
+	printf("called shell_sort, size = %d\n", size);
 
 
 }
-int* insertion_sort(int* arr) {
+
+void insertion_sort(int* arr, int size) {
 
 
-	printf("called insertion_sort");
+	printf("called insertion_sort, size = %d\n", size);
 
 }

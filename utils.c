@@ -9,12 +9,12 @@
 extern unsigned long long MAX_RAND;
 extern short multiplier;
 extern char* file_name;
-extern int* (*alg_fs[ALGO_COUNT])(int*);
+extern void (*alg_fs[ALGO_COUNT])(int*, int);
 extern short benchmark_mode;
 extern int* dataset;
 extern int* random_arr;
 extern FILE* file;
-extern int* (*algorithm)(int*);
+extern void (*algorithm)(int*, int);
 extern int dataset_size;
 extern int ra_size;
 
@@ -53,7 +53,7 @@ int* get_random_array(int size) {
 	return arr;
 }
 
-int* (*(return_algo(char* str))) (int*) {
+void (*(return_algo(char* str))) (int*, int) {
 
 	if (!strcmp(str, "shell_sort") || !strcmp(str, "shell") || !strcmp(str, "shellsort"))
 		return alg_fs[SHELL_SORT];
@@ -126,9 +126,9 @@ void get_random_file(int count, char* file_name) {
 
 	printf("%s\n", file_name);
 
-	FILE* out_file = fopen(file_name, "w+");
+	FILE* out_file = file ? file : fopen(file_name, "w+");
 
-	if (!file)
+	if (!out_file)
 		return;
 	printf("HERE\n");
 	for (int i = 0; i < count; i++)
@@ -160,4 +160,15 @@ int* read_file() {
 	
 
 	return res;
+}
+
+int check_dataset() {
+
+	for (int i = 0; i < dataset_size; i++) {
+
+		if (dataset[i] == 0)
+			return 0;
+	}
+
+	return 1;
 }

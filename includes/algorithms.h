@@ -1,4 +1,2 @@
-#define ALGORITHMS_H
-
-int* shell_sort(int* arr);
-int* insertion_sort(int* arr);
+void shell_sort(int* arr, int size);
+void insertion_sort(int* arr, int size);
