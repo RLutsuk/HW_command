@@ -9,18 +9,20 @@
 #include "includes/utils.h"
 
 extern unsigned long long MAX_RAND;
-extern short multiplier;
-extern char* file_name;
-extern void (*alg_fs[ALGO_COUNT])(int*, int);
-extern short benchmark_mode;
+extern void (*alg_fs[ALGO_COUNT])(int*, int, int);
 extern int* dataset;
-extern int* random_arr;
-extern FILE* file;
-extern void (*algorithm)(int*, int);
 extern int dataset_size;
-extern int ra_size;
-extern clock_t* shell_times;
-extern clock_t* insert_times;
+
+int* random_arr;
+int ra_size;
+clock_t* shell_times;
+clock_t* insert_times;
+int file_size;
+short multiplier = 1;
+char* file_name;
+short benchmark_mode;
+void (*algorithm)(int*, int, int);
+FILE* file;
 
 
 int main(int argc, char** argv) {
@@ -28,11 +30,12 @@ int main(int argc, char** argv) {
 	alg_fs[0] = shell_sort;
 	alg_fs[1] = insertion_sort;
 
-	multiplier = 1;
 	benchmark_mode = 0;
 	MAX_RAND = RAND_MAX;
 	ra_size = 0;
 	file_name = NULL;
+
+	srand(time(0));
 
 	for (int i = 1; i < argc; i++) {
 
@@ -41,7 +44,7 @@ int main(int argc, char** argv) {
 		if (!strcmp(argv[i], "-a") || !strcmp(argv[i], "--algorithm")) {
 
 			// check is next arg possible algorithm and make variable for it
-			if ((i + 1) <= argc && (algorithm = return_algo(argv[i + 1]))) {
+			if ((i + 1) < argc && (algorithm = return_algo(argv[i + 1]))) {
 
 				i++;
 			}
@@ -89,21 +92,8 @@ int main(int argc, char** argv) {
 
 			// check is next arg an existing file
 
-			if ((i + 1) <= argc) {
-
-				file_name = argv[i + 1];
-				file = fopen(file_name, "r+");
-
-				if (!file && !ra_size) {
-
-					printf("File with provided filename doesn\'t exist or can\'t be opened.\n");
-					return 0;
-				}
-
-				i++;
-
-				// call a function from fhandle.c to read from file
-			}
+			if ((i + 1) < argc)
+				file_name = argv[++i];
 
 			else {
 
@@ -136,7 +126,7 @@ int main(int argc, char** argv) {
 
 			// set maximum random generated number, default is RAND_MAX constant = 2147483647
 
-			if ((i + 1) <= argc && return_num(argv[i + 1], strlen(argv[i + 1]))) {
+			if ((i + 1) < argc && return_num(argv[i + 1], strlen(argv[i + 1]))) {
 
 				MAX_RAND = return_num(argv[i + 1], strlen(argv[i + 1]));
 
@@ -161,7 +151,7 @@ int main(int argc, char** argv) {
 
 			// generate file with random numbers without sorting
 
-			if ((i + 1) <= argc && (ra_size = return_num(argv[i + 1], strlen(argv[i + 1])))) {
+			if ((i + 1) < argc && (ra_size = return_num(argv[i + 1], strlen(argv[i + 1])))) {
 				
 				random_arr = get_random_array(ra_size);
 				i++;
@@ -188,17 +178,16 @@ int main(int argc, char** argv) {
 	}
 
 
-	printf("\n==============================\n");
-	dump_all();
-	printf("\n==============================\n");
-
-
 	if (ra_size) {
 
-		if (file_name)
-			get_random_file(ra_size, file_name);
+		file_name = file_name ? file_name : "output.txt";
+		file = fopen(file_name, "w+");
+
+		if (!file)
+			printf("Unable to open/create file.\n");
+		
 		else
-			get_random_file(ra_size, "output.txt");
+			get_random_file(file, ra_size);
 
 		return 0;
 	}
@@ -218,8 +207,8 @@ int main(int argc, char** argv) {
 				arr_shell = get_random_array(dataset[i]);
 				arr_insert = get_random_array(dataset[i]);
 
-				shell_times[i] = benchmark(arr_shell, dataset[i], alg_fs[SHELL_SORT]);
-				insert_times[i] = benchmark(arr_insert, dataset[i], alg_fs[INSERTION_SORT]);
+				shell_times[i] = benchmark(arr_shell, dataset[i], alg_fs[SHELL_SORT], multiplier);
+				insert_times[i] = benchmark(arr_insert, dataset[i], alg_fs[INSERTION_SORT], multiplier);
 
 			}
 
@@ -233,8 +222,30 @@ int main(int argc, char** argv) {
 		return 0;
 	}
 
-	// TODO standart file sorting
+	if (file_name) {
 
+		if (!algorithm)
+			algorithm = alg_fs[rand() % 2];
+
+		file = fopen(file_name, "r+");
+
+		if (!file)
+			printf("File doesn\'t exist or can\'t be opened.\n");
+
+		else {
+
+			int file_size = 0;
+			int* arr = read_file(file, &file_size);
+
+			algorithm(arr, file_size, multiplier);
+
+			// TODO clear file
+
+			write_file(file, arr, file_size);
+		}
+
+		return 0;
+	}
 
 	return 0;
 }
