@@ -6,30 +6,23 @@
 
 #include "includes/utils.h"
 
-extern unsigned long long MAX_RAND;
-extern void (*alg_fs[ALGO_COUNT])(int*, int, int);
-extern int* dataset;
-extern int dataset_size;
-
 int return_num(char* str, int length) {
 
 	int res = 0;
 
 	for (int i = 0; i < length; i++) {
 
-		if (str[i] > '9' || str[i] < '0') {
+		if (str[i] > '9' || str[i] < '0')
 			return 0;
-		}
-		else {
+
+		else
 			res += (int)(str[i] - '0') * pow(10, length - i - 1);
-		}
 	}
 
 	if (res > 0)
 		return res;
 
-	else
-		return 0;
+	return 0;
 }
 
 int* get_random_array(int size) {
@@ -38,10 +31,8 @@ int* get_random_array(int size) {
 
 	srand(time(0));
 
-	for (int i = 0; i < size; i++) {
-
+	for (int i = 0; i < size; i++)
 		arr[i] = rand() % MAX_RAND;
-	}
 
 	return arr;
 }
@@ -143,11 +134,18 @@ int* read_file(FILE* file, int* file_size) {
 
 int check_dataset() {
 
-	for (int i = 0; i < dataset_size; i++) {
-
+	for (int i = 0; i < dataset_size; i++)
 		if (dataset[i] == 0)
 			return 0;
-	}
 
 	return 1;
+}
+
+clock_t benchmark(int* arr, int size, void (*algorithm)(int*, int, int), int reverse_bit) {
+
+	clock_t start = clock();
+
+	algorithm(arr, size, reverse_bit);
+
+	return (clock() - start);
 }

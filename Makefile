@@ -1,6 +1,6 @@
-OBJS	 = main.o algorithm.o benchmark.o utils.o
-SOURCE	 = main.c algorithm.c benchmark.c utils.c
-HEADER	 = includes/algorithm.h includes/benchmark.h inclues/utils.h
+OBJS	 = main.o algorithm.o utils.o
+SOURCE	 = main.c algorithm.c utils.c
+HEADER	 = includes/algorithm.h inclues/utils.h
 OUT_DIR	 = out
 OUT      = $(OUT_DIR)/sort
 CC	     = gcc
@@ -15,9 +15,6 @@ main.o: main.c | mkdir
 
 algorithm.o: algorithms.c | mkdir
 	$(CC) $(FLAGS) algorithms.c -o $(OUT_DIR)/algorithms.o -std=c11
-
-benchmark.o: benchmark.c | mkdir
-	$(CC) $(FLAGS) benchmark.c -o $(OUT_DIR)/benchmark.o -std=c11
 
 utils.o: utils.c | mkdir
 	$(CC) $(FLAGS) utils.c -o $(OUT_DIR)/utils.o -std=c11
