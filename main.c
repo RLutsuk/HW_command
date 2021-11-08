@@ -115,11 +115,8 @@ int main(int argc, char** argv) {
 
 		else if (!strcmp(argv[i], "-n") || !strcmp(argv[i], "--no-sort")) {	// generate file with random numbers without sorting
 
-			if ((i + 1) < argc && (ra_size = return_num(argv[i + 1], strlen(argv[i + 1])))) {
-				
-				random_arr = get_random_array(ra_size);
+			if ((i + 1) < argc && (ra_size = return_num(argv[i + 1], strlen(argv[i + 1]))))				
 				i++;
-			}
 
 			else {
 
@@ -147,8 +144,11 @@ int main(int argc, char** argv) {
 		if (!file)
 			printf("Unable to open/create file.\n");
 		
-		else
+		else {
+
+			fclose(file);
 			get_random_file(file, ra_size);
+		}
 
 		return 0;
 	}
@@ -171,6 +171,8 @@ int main(int argc, char** argv) {
 				shell_times[i] = benchmark(arr_shell, dataset[i], alg_fs[SHELL_SORT], multiplier);
 				insert_times[i] = benchmark(arr_insert, dataset[i], alg_fs[INSERTION_SORT], multiplier);
 
+				free(arr_shell);
+				free(arr_insert);
 			}
 
 
@@ -193,6 +195,9 @@ int main(int argc, char** argv) {
 			}
 
 			printf("\n===========================================\n");
+
+			free(shell_times);
+			free(insert_times);
 		}
 
 		else
@@ -221,6 +226,8 @@ int main(int argc, char** argv) {
 			freopen(file_name, "w", file);
 
 			write_file(file, arr, file_size);
+
+			fclose(file);
 		}
 
 		return 0;

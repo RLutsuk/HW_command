@@ -48,75 +48,19 @@ void (*(return_algo(char* str))) (int*, int, int) {
 	return NULL;
 }
 
-
-//void dump_all() {
-//
-//	printf("ALGO_FS array:\n");
-//	for (int i = 0; i < ALGO_COUNT; i++)
-//		printf("%p ", alg_fs[i]);
-//	printf("\n");
-//
-//	if (MAX_RAND)
-//		printf("MAX_RAND = %llu\n", MAX_RAND);
-//	else
-//		printf("MAX_RAND is not defined\n");
-//
-//	if (multiplier)
-//		printf("MULTIPLIER = %d\n", multiplier);
-//	else
-//		printf("MULTIPLIER is not defined\n");
-//
-//	if(benchmark_mode)
-//		printf("BENCHMARK_MODE = %d\n", benchmark_mode);
-//	else
-//		printf("BENCHMARK_MODE is not defined\n");
-//
-//	if(file_name)
-//		printf("FILE_NAME = %s\n", file_name);
-//	else
-//		printf("FILE_NAME is not defined\n");
-//
-//	if(algorithm)
-//		printf("ALGORITHM = %p\n", algorithm);
-//	else
-//		printf("ALGORITHM is not defined\n");
-//
-//	if (dataset_size >= 1) {
-//
-//		printf("DATASET_SIZE = %d\n", dataset_size);
-//		printf("DATASET ARRAY:\n");
-//		for (int i = 0; i < dataset_size; i++)
-//			printf("%d ", dataset[i]);
-//		printf("\n");
-//	}
-//	else
-//		printf("DATASET_SIZE is not defined\nDATASET ARRAY is not defined\n");
-//
-//	if (ra_size)
-//		printf("RA_SIZE = %d\n", ra_size);
-//	else
-//		printf("RA_SIZE is not defined\n");
-//
-//	if (file)
-//		printf("FILE is defined\n");
-//	else
-//		printf("FILE is not defined\n");
-//
-//}
-
 void get_random_file(FILE* file, int count) {
 
 	int* arr = get_random_array(count);
 
 	write_file(file, arr, count);
+
+	free(arr);
 }
 
 void write_file(FILE* file, int* source, int count) {
 
 	for (int i = 0; i < count; i++)
 		fprintf(file, "%d\n", source[i]);
-
-	fclose(file);
 }
 
 int* read_file(FILE* file, int* file_size) {
@@ -143,13 +87,9 @@ int check_dataset() {
 
 clock_t benchmark(int* arr, int size, void (*algorithm)(int*, int, int), int reverse_bit) {
 
-	printf("benchmark start: %ld\n", clock());
-
 	clock_t start = clock();
 
 	algorithm(arr, size, reverse_bit);
-
-	printf("benchmark end: %ld\n", clock());
 
 	return (clock() - start);
 }
