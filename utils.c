@@ -143,9 +143,13 @@ int check_dataset() {
 
 clock_t benchmark(int* arr, int size, void (*algorithm)(int*, int, int), int reverse_bit) {
 
+	printf("benchmark start: %ld\n", clock());
+
 	clock_t start = clock();
 
 	algorithm(arr, size, reverse_bit);
+
+	printf("benchmark end: %ld\n", clock());
 
 	return (clock() - start);
 }

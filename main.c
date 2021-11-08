@@ -47,24 +47,24 @@ int main(int argc, char** argv) {
 
 		else if (!strcmp(argv[i], "--dataset")) { // set dataset for benchmark
 
-			dataset_size = 1;
+			dataset_size = 0;
 
 			dataset = (int*)malloc(sizeof(int));
 
-			while ((i + dataset_size) < argc && return_num(argv[i + dataset_size], strlen(argv[i + dataset_size]))) {
+			while ((i + dataset_size + 1) < argc && return_num(argv[i + dataset_size + 1], strlen(argv[i + dataset_size + 1]))) {
 
-				dataset[dataset_size - 1] = return_num(argv[i + dataset_size], strlen(argv[i + dataset_size]));
+				dataset[dataset_size] = return_num(argv[i + dataset_size + 1], strlen(argv[i + dataset_size + 1]));
 				dataset = (int*)realloc(dataset, ++dataset_size);
 			}
 
-			if (dataset_size == 1) {
+			if (dataset_size == 0) {
 
 				printf("You must specify at least 1 not null number after %s parameter.\n", argv[i]);
 				return 0;
 			}
 
 			else
-				i += --dataset_size;
+				i += dataset_size;
 
 		}
 
@@ -155,7 +155,7 @@ int main(int argc, char** argv) {
 
 	if (benchmark_mode) {
 
-		if (dataset_size > 1 && check_dataset()) {
+		if (dataset_size >= 1 && check_dataset()) {
 
 			shell_times = (clock_t*)malloc(sizeof(clock_t) * dataset_size);
 			insert_times = (clock_t*)malloc(sizeof(clock_t) * dataset_size);
@@ -173,14 +173,30 @@ int main(int argc, char** argv) {
 
 			}
 
-			// TODO output results of benchmark
 
-			printf("clocks_per_sec: %ld\n", CLOCKS_PER_SEC);
+			printf("\n\n========RESULTS FOR SHELL SORT=========\n\n");
 
+			for (int k = 0; k < dataset_size; k++) {
+
+				printf("Array size: %d, clocks: %ld, seconds: %ld\n", dataset[k], shell_times[k], shell_times[k] / CLOCKS_PER_SEC);
+
+			}
+
+			printf("\n=======================================\n");
+
+			printf("\n\n========RESULTS FOR INSERTION SORT=========\n\n");
+
+			for (int k = 0; k < dataset_size; k++) {
+
+				printf("Array size: %d, clocks: %ld, seconds: %ld\n", dataset[k], insert_times[k], insert_times[k] / CLOCKS_PER_SEC);
+
+			}
+
+			printf("\n===========================================\n");
 		}
 
 		else
-			printf("You must specify only not nil numbers after --dataset parameter.\n");
+			printf("You must specify --dataset parameter without null numbers.\n");
 		
 		return 0;
 	}
