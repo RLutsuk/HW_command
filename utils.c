@@ -5,10 +5,11 @@
 #include <string.h>
 
 #include "includes/utils.h"
+#include "includes/algorithms.h"
 
-int return_num(char* str, int length) {
+long long return_num(char* str, long long length) {
 
-	int res = 0;
+	long long res = 0;
 
 	for (int i = 0; i < length; i++) {
 
@@ -16,18 +17,15 @@ int return_num(char* str, int length) {
 			return 0;
 
 		else
-			res += (int)(str[i] - '0') * pow(10, length - i - 1);
+			res += (long long)(str[i] - '0') * pow(10, length - i - 1);
 	}
-
-	if (res > 0)
-		return res;
-
-	return 0;
+	
+	return res;
 }
 
-int* get_random_array(int size) {
+long long* get_random_array(long long size, long long MAX_RAND) {
 
-	int* arr = (int*)malloc(sizeof(int) * size);
+	long long* arr = (long long*)malloc(sizeof(long long) * size);
 
 	srand(time(0));
 
@@ -37,46 +35,46 @@ int* get_random_array(int size) {
 	return arr;
 }
 
-void (*(return_algo(char* str))) (int*, int, int) {
+void (*(return_algo(char* str))) (long long*, long long, short) {
 
 	if (!strcmp(str, "shell_sort") || !strcmp(str, "shell") || !strcmp(str, "shellsort"))
-		return alg_fs[SHELL_SORT];
+		return shell_sort;
 
 	if(!strcmp(str, "insertion_sort") || !strcmp(str, "insertion") || !strcmp(str, "insertionsort"))
-		return alg_fs[INSERTION_SORT];
+		return insertion_sort;
 
 	return NULL;
 }
 
-void get_random_file(FILE* file, int count) {
+void get_random_file(FILE* file, long long count, long long MAX_RAND) {
 
-	int* arr = get_random_array(count);
+	long long* arr = get_random_array(count, MAX_RAND);
 
 	write_file(file, arr, count);
 
 	free(arr);
 }
 
-void write_file(FILE* file, int* source, int count) {
+void write_file(FILE* file, long long* source, long long count) {
 
 	for (int i = 0; i < count; i++)
-		fprintf(file, "%d\n", source[i]);
+		fprintf(file, "%lld\n", source[i]);
 }
 
-int* read_file(FILE* file, int* file_size) {
+long long* read_file(FILE* file, long long* file_size) {
 
 	int i = 0;
-	int* res = (int*)malloc(sizeof(int));
+	long long* res = (long long*)malloc(sizeof(long long));
 
-	while (fscanf(file, "%d", &res[i]) != EOF)
-		res = (int*)realloc(res, sizeof(int) * (++i + 1));
+	while (fscanf(file, "%lld", &res[i]) != EOF)
+		res = (long long*)realloc(res, sizeof(long long) * (++i + 1));
 
 	*file_size = i;
 
 	return res;
 }
 
-int check_dataset(int* dataset, int dataset_size) {
+int check_dataset(long long* dataset, long long dataset_size) {
 
 	for (int i = 0; i < dataset_size; i++)
 		if (dataset[i] == 0)
@@ -85,7 +83,7 @@ int check_dataset(int* dataset, int dataset_size) {
 	return 1;
 }
 
-clock_t benchmark(int* arr, int size, void (*algorithm)(int*, int, int), int reverse_bit) {
+clock_t benchmark(long long* arr, long long size, void (*algorithm)(long long*, long long, short), short reverse_bit) {
 
 	clock_t start = clock();
 

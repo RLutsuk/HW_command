@@ -1,19 +1,14 @@
 #define ALGO_COUNT 2
 
-unsigned long long MAX_RAND; // variable for defining max random generated integer
-enum algorithms { SHELL_SORT = 0, INSERTION_SORT = 1 }; // enum with constants defining sorting algorithms
+long long return_num(char* str, long long length); // function returning an integer if str is an integer
+void (*(return_algo(char* str))) (long long*, long long, short); // function returning algorithm if str is a valid algorithm
 
-void (*alg_fs[ALGO_COUNT])(int*, int, int); // array of pointers to sorting functions
+long long* get_random_array(long long size, long long MAX_RAND); // function returning array of random generated integers
 
-int return_num(char* str, int length); // function returning an integer if str is an integer
-void (*(return_algo(char* str))) (int*, int, int); // function returning algorithm if str is a valid algorithm
+long long* read_file(FILE* file, long long* file_size); // function reading array of integers from file
+void write_file(FILE* file, long long* source, long long count); // function writing array of integers to file
+void get_random_file(FILE* file, long long count, long long MAX_RAND); // function writing array of random integers to file
 
-int* get_random_array(int size); // function returning array of random generated integers
+int check_dataset(long long* dataset, long long dataset_size); // function checking dataset for null numbers
 
-int* read_file(FILE* file, int* file_size); // function reading array of integers from file
-void write_file(FILE* file, int* source, int count); // function writing array of integers to file
-void get_random_file(FILE* file, int count); // function writing array of random integers to file
-
-int check_dataset(int* dataset, int dataset_size); // function checking dataset for null numbers
-
-clock_t benchmark(int* arr, int size, void (*algorithm)(int*, int, int), int reverse_bit); // function for benchmarking algorithms
+clock_t benchmark(long long* arr, long long size, void (*algorithm)(long long*, long long, short), short reverse_bit); // function for benchmarking algorithms

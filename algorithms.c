@@ -2,10 +2,10 @@
 
 #include "includes/algorithms.h"
 
-void shell_sort(int* arr, int size, int reverse_bit) {
+void shell_sort(long long* arr, long long size, short reverse_bit) {
 
-    int i, j, step;
-    int tmp;
+    long long i, j, step;
+    long long tmp;
 
     for (step = size / 2; step > 0; step /= 2)
         for (i = step; i < size; i++) {
@@ -24,18 +24,18 @@ void shell_sort(int* arr, int size, int reverse_bit) {
         }
 }
 
-void insertion_sort(int* arr, int size, int reverse_bit) {
+void insertion_sort(long long* arr, long long size, short reverse_bit) {
 
-    int temp;
+    long long temp;
 
-    for (int i = 0; i < size; i++) {
+    for (long long i = 0; i < size; i++) {
 
-        int bsearch_res = i;
+        long long bsearch_res = i;
         temp = arr[i];
 
         if ((bsearch_res = bsearch_more(arr, i + 1, temp)) < i) {
 
-            for (int j = i; j > bsearch_res; j--)
+            for (long long j = i; j > bsearch_res; j--)
                 arr[j] = arr[j - 1];
 
             arr[bsearch_res] = temp;
@@ -43,9 +43,9 @@ void insertion_sort(int* arr, int size, int reverse_bit) {
     }
 }
 
-int bsearch_more(int* arr, int size, int key) {
+long long bsearch_more(long long* arr, long long size, long long key) {
 
-    int mid = arr[size / 2];
+    long long mid = arr[size / 2];
 
     if (mid > key) {
 
