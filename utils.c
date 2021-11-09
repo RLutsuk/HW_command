@@ -76,7 +76,7 @@ int* read_file(FILE* file, int* file_size) {
 	return res;
 }
 
-int check_dataset() {
+int check_dataset(int* dataset, int dataset_size) {
 
 	for (int i = 0; i < dataset_size; i++)
 		if (dataset[i] == 0)

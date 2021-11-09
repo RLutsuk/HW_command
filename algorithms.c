@@ -4,8 +4,6 @@
 
 void shell_sort(int* arr, int size, int reverse_bit) {
 
-	//printf("called shell_sort, size = %d\n", size);
-
     int i, j, step;
     int tmp;
 
@@ -28,21 +26,43 @@ void shell_sort(int* arr, int size, int reverse_bit) {
 
 void insertion_sort(int* arr, int size, int reverse_bit) {
 
-	//printf("called insertion_sort, size = %d\n", size);
+    int temp;
 
-    int newElement, location;
+    for (int i = 0; i < size; i++) {
 
-    for (int i = 1; i < size; i++) {
+        int bsearch_res = i;
+        temp = arr[i];
 
-        newElement = arr[i];
-        location = i - 1;
+        if ((bsearch_res = bsearch_more(arr, i + 1, temp)) < i) {
 
-        while (location >= 0 && arr[location] > newElement) {
+            for (int j = i; j > bsearch_res; j--)
+                arr[j] = arr[j - 1];
 
-            arr[location + 1] = arr[location];
-            location = location - 1;
+            arr[bsearch_res] = temp;
         }
-
-        arr[location + 1] = newElement;
     }
+}
+
+int bsearch_more(int* arr, int size, int key) {
+
+    int mid = arr[size / 2];
+
+    if (mid > key) {
+
+        if (size == 1)
+            return 0;
+
+        return bsearch_more(arr, size / 2, key);
+    }
+
+
+    else if (mid < key) {
+
+        if (size == 1)
+            return 1;
+
+        return ((size / 2) + bsearch_more(arr + size / 2, size - size / 2, key));
+    }
+
+    return (size / 2);
 }

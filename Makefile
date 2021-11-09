@@ -4,8 +4,8 @@ HEADER	 = includes/algorithm.h inclues/utils.h
 OUT_DIR	 = out
 OUT      = $(OUT_DIR)/sort
 CC	     = gcc
-FLAGS	 = -c -Wall -O0
-LFLAGS   = -lm -O0
+FLAGS	 = -g -c -Wall 
+LFLAGS   = -lm
 
 all: $(OBJS) | mkdir
 	$(CC) -g $(OUT_DIR)/* -o $(OUT) $(LFLAGS)

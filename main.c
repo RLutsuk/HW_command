@@ -16,6 +16,8 @@ int file_size = 0;
 short multiplier = 1;
 int ra_size = 0;
 short benchmark_mode = 0;
+int* dataset = NULL;
+long dataset_size = 0;
 
 int main(int argc, char** argv) {
 
@@ -47,14 +49,12 @@ int main(int argc, char** argv) {
 
 		else if (!strcmp(argv[i], "--dataset")) { // set dataset for benchmark
 
-			dataset_size = 0;
-
 			dataset = (int*)malloc(sizeof(int));
 
 			while ((i + dataset_size + 1) < argc && return_num(argv[i + dataset_size + 1], strlen(argv[i + dataset_size + 1]))) {
-
+				
 				dataset[dataset_size] = return_num(argv[i + dataset_size + 1], strlen(argv[i + dataset_size + 1]));
-				dataset = (int*)realloc(dataset, ++dataset_size);
+				dataset = (int*)realloc(dataset, ++dataset_size + 1);
 			}
 
 			if (dataset_size == 0) {
@@ -101,7 +101,7 @@ int main(int argc, char** argv) {
 
 			if ((i + 1) < argc && return_num(argv[i + 1], strlen(argv[i + 1]))) {
 			
-				MAX_RAND = return_num(argv[i + 1], strlen(argv[i + 1]));
+				MAX_RAND = return_num(argv[i + 1], strlen(argv[i + 1])) + 1;
 				i++;
 			}
 
@@ -146,8 +146,8 @@ int main(int argc, char** argv) {
 		
 		else {
 
-			fclose(file);
 			get_random_file(file, ra_size);
+			fclose(file);
 		}
 
 		return 0;
@@ -155,7 +155,7 @@ int main(int argc, char** argv) {
 
 	if (benchmark_mode) {
 
-		if (dataset_size >= 1 && check_dataset()) {
+		if (dataset_size >= 1 && check_dataset(dataset, dataset_size)) {
 
 			shell_times = (clock_t*)malloc(sizeof(clock_t) * dataset_size);
 			insert_times = (clock_t*)malloc(sizeof(clock_t) * dataset_size);
@@ -198,6 +198,8 @@ int main(int argc, char** argv) {
 
 			free(shell_times);
 			free(insert_times);
+
+			free(dataset);
 		}
 
 		else
