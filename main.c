@@ -6,19 +6,19 @@
 #include "includes/algorithms.h"
 #include "includes/utils.h"
 
-void (*algorithm)(long long*, long long, short) = NULL;
-FILE* file = NULL;
-long long* random_arr = NULL;
-char* file_name = NULL;
-clock_t* shell_times = NULL;
-clock_t* insert_times = NULL;
-long long file_size = 0;
-short multiplier = 1;
-long long ra_size = 0;
-short benchmark_mode = 0;
-long long* dataset = NULL;
-long long dataset_size = 0;
-unsigned long long MAX_RAND = RAND_MAX; // variable for defining max random generated integer
+void (*algorithm)(long long*, long long, short) = NULL; // variable for storing pointer to sorting function
+FILE* file = NULL; // variable for file handling
+char* file_name = NULL; // string for storing opening file name
+clock_t* shell_times = NULL; // array with clock values for benchmark shell sorting
+clock_t* insert_times = NULL; // array with clock values for benchmark insertion sorting
+clock_t* insert_s_times = NULL; // array with clock values for benchmark slow insertion sorting
+long long file_size = 0; // variable with count of integer read from file
+short multiplier = 1; // variable-modificator for reverse/non-reverse sorting
+long long ra_size = 0; // variable with size of array with random integers for just-gen option
+short benchmark_mode = 0; // variable that sets benchmark program mode
+long long* dataset = NULL; // array with sizes of arrays to test in benchmark
+long long dataset_size = 0; // variable-size of dataset array
+unsigned long long max_random = RAND_MAX; // variable for defining max random generated integer
 
 
 int main(int argc, char** argv) {
@@ -26,8 +26,6 @@ int main(int argc, char** argv) {
 	srand(time(0));
 
 	for (int i = 1; i < argc; i++) {
-
-		//printf("i = %d: %s\n", i, argv[i]);
 
 		if (!strcmp(argv[i], "-a") || !strcmp(argv[i], "--algorithm")) { // check is next arg possible algorithm and make variable for it
 
@@ -99,7 +97,7 @@ int main(int argc, char** argv) {
 
 			if ((i + 1) < argc && return_num(argv[i + 1], strlen(argv[i + 1])) && return_num(argv[i + 1], strlen(argv[i + 1])) > 0) {
 			
-				MAX_RAND = return_num(argv[i + 1], strlen(argv[i + 1])) + 1;
+				max_random = return_num(argv[i + 1], strlen(argv[i + 1])) + 1;
 				i++;
 			}
 
@@ -144,7 +142,7 @@ int main(int argc, char** argv) {
 		
 		else {
 
-			get_random_file(file, ra_size, MAX_RAND);
+			get_random_file(file, ra_size, max_random);
 			fclose(file);
 		}
 
@@ -157,46 +155,52 @@ int main(int argc, char** argv) {
 
 			shell_times = (clock_t*)malloc(sizeof(clock_t) * dataset_size);
 			insert_times = (clock_t*)malloc(sizeof(clock_t) * dataset_size);
+			insert_s_times = (clock_t*)malloc(sizeof(clock_t) * dataset_size);
 
 			long long* arr_shell;
 			long long* arr_insert;
+			long long* arr_insert_s;
 
 			for (long long i = 0; i < dataset_size; i++) {
 
-				arr_shell = get_random_array(dataset[i], MAX_RAND);
-				arr_insert = get_random_array(dataset[i], MAX_RAND);
+				arr_shell = get_random_array(dataset[i], max_random);
+				arr_insert = get_random_array(dataset[i], max_random);
+				arr_insert_s = get_random_array(dataset[i], max_random);
 
 				shell_times[i] = benchmark(arr_shell, dataset[i], shell_sort, multiplier);
 				insert_times[i] = benchmark(arr_insert, dataset[i], insertion_sort, multiplier);
+				insert_s_times[i] = benchmark(arr_insert_s, dataset[i], insertion_sort_slow, multiplier);
 
 				free(arr_shell);
 				free(arr_insert);
+				free(arr_insert_s);
 			}
 
 
 			printf("\n\n========RESULTS FOR SHELL SORT=========\n\n");
 
-			for (long long k = 0; k < dataset_size; k++) {
-
-				printf("Array size: %lld, clocks: %ld, seconds: %ld\n", dataset[k], shell_times[k], shell_times[k] / CLOCKS_PER_SEC);
-
-			}
+			for (long long k = 0; k < dataset_size; k++)
+				printf("Array size: %lld, clocks: %ld, seconds: %Lf\n", dataset[k], shell_times[k], (long double)shell_times[k] / (long double)CLOCKS_PER_SEC);
 
 			printf("\n=======================================\n");
 
 			printf("\n\n========RESULTS FOR INSERTION SORT=========\n\n");
 
-			for (long long k = 0; k < dataset_size; k++) {
+			for (long long k = 0; k < dataset_size; k++)
+				printf("Array size: %lld, clocks: %ld, seconds: %Lf\n", dataset[k], insert_times[k], (long double)insert_times[k] / (long double)CLOCKS_PER_SEC);
 
-				printf("Array size: %lld, clocks: %ld, seconds: %ld\n", dataset[k], insert_times[k], insert_times[k] / CLOCKS_PER_SEC);
+			printf("\n===========================================\n\n");
 
-			}
+			printf("\n\n========RESULTS FOR SLOW INSERTION SORT=========\n\n");
 
-			printf("\n===========================================\n\n\n");
+			for (long long k = 0; k < dataset_size; k++)
+				printf("Array size: %lld, clocks: %ld, seconds: %Lf\n", dataset[k], insert_s_times[k], (long double)insert_s_times[k] / (long double)CLOCKS_PER_SEC);
+
+			printf("\n================================================\n\n\n");
 
 			free(shell_times);
 			free(insert_times);
-
+			free(insert_s_times);
 			free(dataset);
 		}
 
@@ -224,10 +228,10 @@ int main(int argc, char** argv) {
 			algorithm(arr, file_size, multiplier);
 
 			freopen(file_name, "w", file);
-
 			write_file(file, arr, file_size);
-
 			fclose(file);
+
+			free(arr);
 		}
 
 		return 0;

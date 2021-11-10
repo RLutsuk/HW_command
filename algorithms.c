@@ -4,24 +4,41 @@
 
 void shell_sort(long long* arr, long long size, short reverse_bit) {
 
-    long long i, j, step;
-    long long tmp;
+    long long step = (size >> 1);
 
-    for (step = size / 2; step > 0; step /= 2)
-        for (i = step; i < size; i++) {
+    while(step) {
 
-        tmp = arr[i];
+        for(long long i = step; i < size; i++) {
 
-            for (j = i; j >= step; j -= step) {
+            for(long long k = i - step; k >= 0 && (reverse_bit * arr[k]) > (reverse_bit * arr[k + step]); k -= step) {
 
-                if (tmp < arr[j - step])
-                    arr[j] = arr[j - step];
-                else
-                    break;
+                long long temp = arr[k];
+                arr[k] = arr[k + step];
+                arr[k + step] = temp;
             }
-
-            arr[j] = tmp;
         }
+
+        step >>= 1;
+    }
+}
+
+void insertion_sort_slow(long long* arr, long long size, short reverse_bit) {
+
+    long long temp;
+    long long index;
+ 
+    for (long long i = 1; i < size; i++) {
+
+        temp = arr[i];
+        index = i - 1;
+
+        while(index >= 0 && (reverse_bit * arr[index]) > (reverse_bit * temp)) {
+            arr[index + 1] = arr[index];
+            index--;
+        }
+
+        arr[index + 1] = temp;
+    }
 }
 
 void insertion_sort(long long* arr, long long size, short reverse_bit) {
@@ -33,7 +50,7 @@ void insertion_sort(long long* arr, long long size, short reverse_bit) {
         long long bsearch_res = i;
         temp = arr[i];
 
-        if ((bsearch_res = bsearch_more(arr, i + 1, temp)) < i) {
+        if ((bsearch_res = bsearch_more(arr, i, temp)) < i) {
 
             for (long long j = i; j > bsearch_res; j--)
                 arr[j] = arr[j - 1];
@@ -41,28 +58,35 @@ void insertion_sort(long long* arr, long long size, short reverse_bit) {
             arr[bsearch_res] = temp;
         }
     }
+
+    if(reverse_bit == -1)
+        for(long long i = 0; i < (size >> 1); i++) {
+
+            temp = arr[i];
+            arr[i] = arr[size - i - 1];
+            arr[size - i - 1] = temp;
+        }
 }
 
 long long bsearch_more(long long* arr, long long size, long long key) {
 
-    long long mid = arr[size / 2];
+    long long mid = arr[(size >> 1)];
 
     if (mid > key) {
 
         if (size == 1)
             return 0;
 
-        return bsearch_more(arr, size / 2, key);
+        return bsearch_more(arr, (size >> 1), key);
     }
-
 
     else if (mid < key) {
 
         if (size == 1)
             return 1;
 
-        return ((size / 2) + bsearch_more(arr + size / 2, size - size / 2, key));
+        return ((size >> 1) + bsearch_more(arr + (size >> 1), size - (size >> 1), key));
     }
 
-    return (size / 2);
+    return (size >> 1);
 }

@@ -19,18 +19,18 @@ long long return_num(char* str, long long length) {
 		else
 			res += (long long)(str[i] - '0') * pow(10, length - i - 1);
 	}
-	
+
 	return res;
 }
 
-long long* get_random_array(long long size, long long MAX_RAND) {
+long long* get_random_array(long long size, unsigned long long max_random) {
 
 	long long* arr = (long long*)malloc(sizeof(long long) * size);
 
 	srand(time(0));
 
 	for (int i = 0; i < size; i++)
-		arr[i] = rand() % MAX_RAND;
+		arr[i] = rand() % max_random;
 
 	return arr;
 }
@@ -46,9 +46,9 @@ void (*(return_algo(char* str))) (long long*, long long, short) {
 	return NULL;
 }
 
-void get_random_file(FILE* file, long long count, long long MAX_RAND) {
+void get_random_file(FILE* file, long long count, unsigned long long max_random) {
 
-	long long* arr = get_random_array(count, MAX_RAND);
+	long long* arr = get_random_array(count, max_random);
 
 	write_file(file, arr, count);
 
