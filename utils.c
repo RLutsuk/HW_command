@@ -11,7 +11,7 @@ long long return_num(char* str, long long length) {
 
 	long long res = 0;
 
-	for (int i = 0; i < length; i++) {
+	for (long long i = 0; i < length; i++) {
 
 		if (str[i] > '9' || str[i] < '0')
 			return 0;
@@ -29,7 +29,7 @@ long long* get_random_array(long long size, unsigned long long max_random) {
 
 	srand(time(0));
 
-	for (int i = 0; i < size; i++)
+	for (long long i = 0; i < size; i++)
 		arr[i] = rand() % max_random;
 
 	return arr;
@@ -57,13 +57,13 @@ void get_random_file(FILE* file, long long count, unsigned long long max_random)
 
 void write_file(FILE* file, long long* source, long long count) {
 
-	for (int i = 0; i < count; i++)
+	for (long long i = 0; i < count; i++)
 		fprintf(file, "%lld\n", source[i]);
 }
 
 long long* read_file(FILE* file, long long* file_size) {
 
-	int i = 0;
+	long long i = 0;
 	long long* res = (long long*)malloc(sizeof(long long));
 
 	while (fscanf(file, "%lld", &res[i]) != EOF)
@@ -74,9 +74,9 @@ long long* read_file(FILE* file, long long* file_size) {
 	return res;
 }
 
-int check_dataset(long long* dataset, long long dataset_size) {
+short check_dataset(long long* dataset, long long dataset_size) {
 
-	for (int i = 0; i < dataset_size; i++)
+	for (long long i = 0; i < dataset_size; i++)
 		if (dataset[i] == 0)
 			return 0;
 
