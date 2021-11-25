@@ -13,8 +13,8 @@ long long return_num(char* str, long long length) {
 
 	for (long long i = 0; i < length; i++) {
 
-		if (str[i] > '9' || str[i] < '0')
-			return 0;
+		if ((str[i] > '9' || str[i] < '0') && str[i] != '-')
+			return -1;
 
 		else
 			res += (long long)(str[i] - '0') * pow(10, length - i - 1);
@@ -66,8 +66,15 @@ long long* read_file(FILE* file, long long* file_size) {
 	long long i = 0;
 	long long* res = (long long*)malloc(sizeof(long long));
 
-	while (fscanf(file, "%lld", &res[i]) != EOF)
+	char* temp = (char*)malloc(sizeof(char) * 100);
+
+	while (fscanf(file, "%s", temp) != EOF){
+
+		if((res[i] = return_num(temp, strlen(temp))) == -1)
+			return NULL;
+
 		res = (long long*)realloc(res, sizeof(long long) * (++i + 1));
+	}
 
 	*file_size = i;
 

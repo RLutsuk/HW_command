@@ -218,6 +218,12 @@ int main(int argc, char** argv) {
 			long long file_size = 0;
 			long long* arr = read_file(file, &file_size);
 
+			if(!arr){
+
+				printf("Unsupported characters detected, exiting...\n");
+				return 0;
+			}
+
 			algorithm(arr, file_size, multiplier);
 
 			freopen(file_name, "w", file);
